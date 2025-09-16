@@ -3,9 +3,13 @@ import argparse
 from PIL import Image, ImageDraw
 
 def read_data(path):
-    image = cv2.imread('test_photo_1.jpg')
-    gimage = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    return image, gimage
+    try:
+        image = cv2.imread(path)
+        gimage = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        return image, gimage
+    except:
+        raise Exception("Incorrect path to file")
+        exit(0)
 
 def main(path):
     image, gimage = read_data(path)
@@ -19,7 +23,7 @@ def main(path):
         draw.ellipse((x-10,y-10, x+10, y+10), outline="red")
     im.save("found.jpg", quality=120)
     im.close()
-    
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
