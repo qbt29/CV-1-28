@@ -1,23 +1,27 @@
 import cv2
-import argparse
+import argparse, os
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from PIL import Image, ImageDraw
 from skimage import data
 
-
 def read_data(path):
     '''
     Чтение данных из фото
-    :param path:
-    :return:
+    :param path: str
+    :return: 
     '''
-    try:
+    if os.path.exists(path=path):
         image = cv2.imread(path)
+    else:
+        print("Incorrect path to file")
+        exit(1)
+    try:
         gimage = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         return image, gimage
     except:
-        raise Exception("Incorrect path to file")
+        print("Incorrect data")
+        exit(1)
 
 def find_corners(gimage):
     '''
@@ -63,9 +67,6 @@ def main(flags:list) -> None:
         display_data(image, corners, 'm')
     else:
         display_data(image, corners, 'f', flags.f)
-
-
-
 
 
 if __name__ == '__main__':
