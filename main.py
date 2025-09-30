@@ -7,21 +7,20 @@ from PIL import Image, ImageDraw
 from skimage import data
 
 def read_data(path:str):
-    if type(path) != str:
-        print("Wrong type of path")
-        exit(1)
     '''
     Чтение данных из фото
     :param path: str - путь к файлу
-    :return: 
+    :return:
         (np.ndarrray, np.ndarray)
     '''
+    if type(path) != str:
+        print("Wrong type of path")
+        exit(1)
     if os.path.exists(path=path):
         image = cv2.imread(path)
     else:
         print("Incorrect path to file")
         exit(1)
-    print(type(image))
     try:
         gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         return image, gray_image
@@ -30,9 +29,6 @@ def read_data(path:str):
         exit(1)
 
 def find_corners(gray_image, maxCorners=100, qualityLevel=0.08, minDistance=10, HarrisDetector=False) -> np.ndarray:
-    if not(type(gray_image) == np.ndarray and type(maxCorners) == int and type(qualityLevel) in [int, float] and 0<=qualityLevel<=1 and type(minDistance) in [int, float] and type(HarrisDetector) is bool):
-        print("Wrong input data in find_corners, abort")
-        exit(1)
     '''
     Находит углы в gray_image
     :params:
@@ -44,8 +40,10 @@ def find_corners(gray_image, maxCorners=100, qualityLevel=0.08, minDistance=10, 
     :return:
         np.ndarray - массив коориднат найденных углов вида (x, y)
     '''
+    if not(type(gray_image) == np.ndarray and type(maxCorners) == int and type(qualityLevel) in [int, float] and 0<=qualityLevel<=1 and type(minDistance) in [int, float] and type(HarrisDetector) is bool):
+        print("Wrong input data in find_corners, abort")
+        exit(1)
     corners = cv2.goodFeaturesToTrack(gray_image, maxCorners=maxCorners, qualityLevel=qualityLevel, minDistance=minDistance, useHarrisDetector=HarrisDetector)
-    print(type(corners), 'corners')
     return corners
 
 def display_data(file:np.ndarray, corners:np.ndarray, mode:str='m', path_to_save=None) -> None:
@@ -83,7 +81,6 @@ def display_data(file:np.ndarray, corners:np.ndarray, mode:str='m', path_to_save
         im.close()
 
 def main(flags:dict) -> None:
-
     if flags.path is None:
         gray_image = data.coins()  # Загружаем изображение
         image = gray_image
